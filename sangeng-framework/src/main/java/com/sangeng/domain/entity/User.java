@@ -20,7 +20,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("sys_user")
 public class User  {
-    //主键@TableId
+    //主键
+    @TableId
     private Long id;
 
     //用户名
