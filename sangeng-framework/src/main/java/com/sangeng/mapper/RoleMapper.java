@@ -2,6 +2,7 @@ package com.sangeng.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sangeng.domain.entity.Role;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,6 +17,10 @@ public interface RoleMapper extends BaseMapper<Role> {
 
 
     List<String> selectRoleKeyByUserId(Long id);
+
+    void insertRoleMenu(@Param("id") Long id, @Param("menuIds") List menuIds);
+
+    void deleteMenuById(Long id);
 }
 
 

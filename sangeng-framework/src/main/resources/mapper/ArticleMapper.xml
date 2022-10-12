@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sangeng.mapper.ArticleMapper">
+    <update id="saveArticleTags">
+        delete from sg_article_tag where article_id = #{id};
+        insert into sg_article_tag(article_id, tag_id)
+        values
+        <foreach collection="tags" item="item" index="index" separator=",">
+            (#{id},#{item})
+        </foreach>
+        ;
+
+    </update>
+
+    <select id="getArticleTagIdById" resultType="java.lang.Long">
+
+        select tag_id
+        from sg_article_tag
+        where article_id = #{id}
+
+    </select>
+</mapper>

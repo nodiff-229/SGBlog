@@ -11,14 +11,13 @@ import com.sangeng.domain.dto.AddArticleDto;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.ArticleTag;
 import com.sangeng.domain.entity.Category;
-import com.sangeng.domain.vo.ArticleDetailVo;
-import com.sangeng.domain.vo.ArticleListVo;
-import com.sangeng.domain.vo.HotArticleVo;
-import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.entity.Tag;
+import com.sangeng.domain.vo.*;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
 import com.sangeng.service.ArticleTagService;
 import com.sangeng.service.CategoryService;
+import com.sangeng.service.TagService;
 import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.RedisCache;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private ArticleTagService articleTagService;
+
+    @Autowired
+    private TagService tagService;
 
     @Override
     public ResponseResult hotArticleList() {
@@ -158,4 +161,41 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleTagService.saveBatch(articleTags);
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult listArticle(Long pageNum, Long pageSize, String title, String summary) {
+        //可以根据title和summary进行模糊查询
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(StringUtils.hasText(title), Article::getTitle, title);
+        lambdaQueryWrapper.like(StringUtils.hasText(summary), Article::getSummary, summary);
+        //对结果进行分页显示
+        Page<Article> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page, lambdaQueryWrapper);
+        List<Article> articles = page.getRecords();
+        //封装成结果返回
+
+        List<AdminArticleVo> adminArticleVos = BeanCopyUtils.copyBeanList(articles, AdminArticleVo.class);
+        AdminArticleListVo adminArticleListVo = new AdminArticleListVo(adminArticleVos, page.getTotal());
+
+        return ResponseResult.okResult(adminArticleListVo);
+
+
+
+    }
+
+    @Override
+    public List<Long> getArticleTagById(Long id) {
+        return getBaseMapper().getArticleTagIdById(id);
+    }
+
+    @Override
+    public void saveArticleTags(Long id, List<Long> tags) {
+
+        getBaseMapper().saveArticleTags(id, tags);
+
+    }
+
+
 }

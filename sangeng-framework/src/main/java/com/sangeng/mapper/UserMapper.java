@@ -2,6 +2,9 @@ package com.sangeng.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sangeng.domain.entity.User;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 
 /**
@@ -12,6 +15,11 @@ import com.sangeng.domain.entity.User;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    void insertUserRole(@Param("id") Long id, @Param("roleIds") List<String> roleIds);
+
+    List<String> getRoleByUserId(Long id);
+
+    void deleteUserRole(Long id);
 }
 
 

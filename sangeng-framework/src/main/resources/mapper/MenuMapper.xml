@@ -56,4 +56,7 @@
         order by
             m.parent_id,m.order_num
     </select>
+    <select id="selectMenuByUserId" resultType="java.lang.String">
+        select menu_id from sys_role_menu where role_id = #{id}
+    </select>
 </mapper>

@@ -19,7 +19,9 @@ public enum AppHttpCodeEnum {
     PASSWORD_NOT_NULL(510, "密码不能为空"),
     EMAIL_NOT_NULL(511, "邮箱不能为空"),
     TAG_NAME_NOT_NULL(512, "标签名不能为空"),
-    TAG_NOT_EXIST(513, "标签不存在");
+    TAG_NOT_EXIST(513, "标签不存在"),
+    MENU_NOT_EXIST(514, "菜单查询有误"),
+   ;
 
 
     int code;
